@@ -1,0 +1,8 @@
+<launch>
+  <!-- 真正启动相机的节点 -->
+  <node name="camera" pkg="realsense2_camera" type="realsense2_camera_node" output="screen">
+    <param name="enable_color" value="true" />
+    <param name="enable_depth" value="true" />
+    <param name="enable_ir" value="true" />
+  </node>
+</launch>

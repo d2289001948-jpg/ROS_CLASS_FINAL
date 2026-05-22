@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>nav_pkg</name>
+  <version>0.0.1</version>
+  <description>Python navigation package using move_base action</description>
+  <maintainer email="bcsh@todo.todo">bcsh</maintainer>
+  <license>MIT</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <depend>rospy</depend>
+  <depend>actionlib</depend>
+  <depend>move_base_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>tf2</depend>
+  <depend>tf2_ros</depend>
+</package>

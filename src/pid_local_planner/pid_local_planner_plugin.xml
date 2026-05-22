@@ -1,0 +1,7 @@
+<library path="lib/libpid_local_planner">
+  <class name="pid_local_planner/PIDLocalPlanner"
+         type="pid_local_planner::PIDLocalPlanner"
+         base_class_type="nav_core::BaseLocalPlanner">
+    <description>运动学模型局部规划器，前瞻控制 + 旋转矩阵误差映射</description>
+  </class>
+</library>

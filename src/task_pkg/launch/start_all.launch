@@ -1,0 +1,10 @@
+<launch>
+  <!-- 底盘 + 传感器 -->
+  <include file="$(find upros_bringup)/launch/bringup_w2a.launch" />
+
+  <!-- 导航：lidar_loc 定位 + jie_ware 滤波 + TEB 规划（scan_filtered 代价地图） -->
+  <include file="$(find task_pkg)/launch/navigation_pid.launch" />
+
+  <!-- 语音 TTS -->
+  <include file="$(find upros_chat)/launch/word_to_speech.launch" />
+</launch>

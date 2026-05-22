@@ -1,0 +1,15 @@
+<launch>
+  <!-- 原版 move_base.launch.xml 结构，仅追加 scan_filtered 覆盖 -->
+  <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+    <rosparam file="$(find upros_navigation)/config/costmap/costmap_common_params.yaml" command="load" ns="global_costmap"/>
+    <rosparam file="$(find upros_navigation)/config/costmap/costmap_common_params.yaml" command="load" ns="local_costmap"/>
+    <rosparam file="$(find upros_navigation)/config/costmap/local_costmap_params.yaml"  command="load"/>
+    <rosparam file="$(find upros_navigation)/config/costmap/global_costmap_params.yaml" command="load"/>
+    <rosparam file="$(find upros_navigation)/config/planner/teb_local_planner_params.yaml" command="load"/>
+    <rosparam file="$(find upros_navigation)/config/planner/global_planner_params.yaml"   command="load"/>
+    <rosparam file="$(find upros_navigation)/config/move_base_params.yaml"               command="load"/>
+    <!-- lidar_filter_node 在跑，代价地图必须用 scan_filtered 而非原始 scan -->
+    <param name="local_costmap/obstacle_layer/scan/topic"  value="/scan_filtered"/>
+    <param name="global_costmap/obstacle_layer/scan/topic" value="/scan_filtered"/>
+  </node>
+</launch>

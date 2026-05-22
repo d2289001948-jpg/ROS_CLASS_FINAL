@@ -1,0 +1,37 @@
+<launch>
+  <param name="use_sim_time" value="false" />
+  <arg name="map_name" default="my_lab.yaml" />
+
+  <node name="map_server" pkg="map_server" type="map_server"
+        args="$(find upros_navigation)/maps/$(arg map_name)"/>
+
+  <!-- lidar_loc 定位：扫描匹配，发布 map->odom_combined TF（时间戳已加 100ms 偏移，无外推错误） -->
+  <node pkg="jie_ware" type="lidar_loc" name="lidar_loc" output="screen">
+    <param name="base_frame"  value="base_footprint"/>
+    <param name="odom_frame"  value="odom_combined"/>
+    <param name="laser_frame" value="laser_link"/>
+    <param name="laser_topic" value="scan"/>
+  </node>
+
+  <!-- jie_ware 激光滤波：原始 /scan -> 滤波后 /scan_filtered，去除噪点 -->
+  <node pkg="jie_ware" type="lidar_filter_node" name="lidar_filter_node" output="screen"/>
+
+  <!-- jie_ware 代价地图清理：启动后自动清除初始噪点障碍 -->
+  <node pkg="jie_ware" type="costmap_cleaner" name="costmap_cleaner" output="screen"/>
+
+  <!-- move_base：标准 TEB，代价地图改用滤波后雷达 /scan_filtered -->
+  <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+    <rosparam file="$(find upros_navigation)/config/costmap/costmap_common_params.yaml" command="load" ns="global_costmap"/>
+    <rosparam file="$(find upros_navigation)/config/costmap/costmap_common_params.yaml" command="load" ns="local_costmap"/>
+    <rosparam file="$(find upros_navigation)/config/costmap/local_costmap_params.yaml"  command="load"/>
+    <rosparam file="$(find upros_navigation)/config/costmap/global_costmap_params.yaml" command="load"/>
+    <rosparam file="$(find upros_navigation)/config/planner/teb_local_planner_params.yaml" command="load"/>
+    <rosparam file="$(find upros_navigation)/config/planner/global_planner_params.yaml"   command="load"/>
+    <rosparam file="$(find upros_navigation)/config/move_base_params.yaml"               command="load"/>
+    <!-- 覆盖代价地图雷达话题：用滤波后数据，消除噪点虚假障碍物 -->
+    <param name="local_costmap/obstacle_layer/scan/topic"  value="/scan_filtered"/>
+    <param name="global_costmap/obstacle_layer/scan/topic" value="/scan_filtered"/>
+  </node>
+
+  <node pkg="task_pkg" type="print_pose.py" name="print_initial_pose" output="screen"/>
+</launch>

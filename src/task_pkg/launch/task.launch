@@ -1,0 +1,3 @@
+<launch>
+  <node pkg="task_pkg" type="state_machine.py" name="task_state_machine" output="screen" />
+</launch>
